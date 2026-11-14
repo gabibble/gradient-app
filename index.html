@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gradient Generator</title>
-<meta name="description" content="A simple, beautiful CSS gradient generator. Pick colors, set the angle, copy the CSS.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23FF3D77'/%3E%3Cstop offset='.5' stop-color='%23FF9A3D'/%3E%3Cstop offset='1' stop-color='%23FFE66D'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='7' fill='url(%23g)'/%3E%3C/svg%3E">
+<meta name="description" content="A simple, beautiful CSS gradient generator. Pick colors, drag to blend, copy the CSS.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23FFB199'/%3E%3Cstop offset='.5' stop-color='%23FF7EB3'/%3E%3Cstop offset='1' stop-color='%238F7BFF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='7' fill='url(%23g)'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,900&display=swap" rel="stylesheet">
@@ -14,51 +14,76 @@
 <body>
 <main class="app">
   <section class="preview" id="preview" aria-label="Gradient preview">
-    <h1>Gradient<br>Generator.</h1>
-    <div class="out">
+    <div class="lead">
+      <h1>Gradient<br>Generator.</h1>
       <code id="css"></code>
-      <button type="button" class="copy" id="copy">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-        <span id="copy-label">Copy CSS</span>
-      </button>
+      <div class="actions">
+        <button type="button" class="link" id="copy">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+          <span id="copy-label">Copy CSS</span>
+        </button>
+        <div class="png">
+          <button type="button" class="link" id="png" aria-haspopup="true" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>
+            <span id="png-label">Download PNG</span>
+          </button>
+          <div class="menu" id="png-menu" hidden>
+            <button type="button" data-w="1920" data-h="1080"><span>Desktop</span><span>1920 × 1080</span></button>
+            <button type="button" data-w="1080" data-h="1080"><span>Square</span><span>1080 × 1080</span></button>
+            <button type="button" data-w="1080" data-h="1920"><span>Phone</span><span>1080 × 1920</span></button>
+          </div>
+        </div>
+      </div>
     </div>
+    <button type="button" class="switch" id="legacy" role="switch" aria-checked="false">
+      <i aria-hidden="true"></i>Older browsers
+    </button>
   </section>
 
   <section class="editor" aria-label="Gradient controls">
-    <div class="stripes" id="stripes"></div>
+    <div class="blocks">
+      <div class="blocks-inner" id="blocks"></div>
+      <button type="button" class="add" id="add" aria-label="Add color">+</button>
+    </div>
 
-    <div class="bar">
-      <div class="types" role="radiogroup" aria-label="Gradient type">
-        <button type="button" role="radio" data-type="linear">Linear</button>
-        <button type="button" role="radio" data-type="radial">Radial</button>
-        <button type="button" role="radio" data-type="conic">Conic</button>
-      </div>
-
-      <div class="opts">
-        <div class="opt" id="opt-shape">
-          <div class="types small" role="radiogroup" aria-label="Shape">
-            <button type="button" role="radio" data-shape="circle">Circle</button>
-            <button type="button" role="radio" data-shape="ellipse">Ellipse</button>
-          </div>
+    <div class="panel">
+      <div class="controls">
+        <div class="types" role="radiogroup" aria-label="Gradient type">
+          <button type="button" role="radio" data-type="linear">Linear</button>
+          <button type="button" role="radio" data-type="radial">Radial</button>
+          <button type="button" role="radio" data-type="conic">Conic</button>
         </div>
 
-        <div class="opt" id="opt-center">
-          <span class="readout" id="center-out"></span>
-          <div class="pad" id="pad" tabindex="0" role="group" aria-label="Center position. Drag the dot, or use the arrow keys.">
-            <div class="dot" id="dot"></div>
+        <div class="opts">
+          <div class="opt" id="opt-center">
+            <span class="readout" id="center-out"></span>
+            <div class="pad" id="pad" tabindex="0" role="group" aria-label="Center position. Drag the dot, or use the arrow keys.">
+              <div class="dot" id="dot"></div>
+            </div>
           </div>
-        </div>
-
-        <div class="opt" id="opt-angle">
-          <label class="num"><input type="number" id="angle" min="0" max="360" step="1" aria-label="Angle in degrees"><span>°</span></label>
-          <div class="dial" id="dial" tabindex="0" role="slider" aria-label="Angle" aria-valuemin="0" aria-valuemax="360">
-            <i id="hand"></i>
+          <div class="opt" id="opt-angle">
+            <label class="num"><input type="number" id="angle" min="0" max="360" step="1" aria-label="Angle in degrees"><span>°</span></label>
+            <div class="dial" id="dial" tabindex="0" role="slider" aria-label="Angle" aria-valuemin="0" aria-valuemax="360">
+              <i id="hand"></i>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="presets-wrap">
+      <div class="presets-label" id="presets-label">Presets</div>
+      <div class="presets" id="presets" role="group" aria-labelledby="presets-label"></div>
+    </div>
   </section>
 </main>
+
+<div class="picker" id="picker" role="dialog" aria-label="Color picker" hidden>
+  <div class="sv" id="sv" tabindex="0" role="group" aria-label="Saturation and brightness. Use the arrow keys."><span id="sv-dot"></span></div>
+  <input type="range" class="hue" id="hue" min="0" max="360" step="1" aria-label="Hue">
+  <input class="picker-hex" id="picker-hex" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Hex code">
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
