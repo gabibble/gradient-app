@@ -5,10 +5,19 @@
   var MAX_STOPS = 8;
   var MIN_STOPS = 2;
 
-  var DEFAULT_COLORS = ['#FAD0C4', '#FFD1FF', '#A1C4FD'];
+  // The gradient the page opens on:
+  // linear-gradient(138deg, #22DBD3, #326FAE 31%, #6A1A8C 67%, #AB0E71)
+  // The weights are the block sizes that put the middle stops at 31% and 67%.
+  var DEFAULT_ANGLE = 138;
+  var DEFAULT_STOPS = [
+    { c: '#22DBD3', w: 0.23 },
+    { c: '#326FAE', w: 0.255 },
+    { c: '#6A1A8C', w: 0.285 },
+    { c: '#AB0E71', w: 0.23 }
+  ];
 
   var PRESETS = [
-    { name: 'Peach sky', colors: DEFAULT_COLORS },
+    { name: 'Peach sky', colors: ['#FAD0C4', '#FFD1FF', '#A1C4FD'] },
     { name: 'Blush', colors: ['#FBEDE7', '#EFCFC6', '#C99A94'] },
     { name: 'Aurora', colors: ['#FFB199', '#FF7EB3', '#8F7BFF'] },
     { name: 'Pearl', colors: ['#FFFFFF', '#EDEAF4', '#CFCBE0'], type: 'radial', x: 70, y: 30 },
@@ -46,11 +55,11 @@
 
   var state = load() || {
     type: 'linear',
-    angle: 160,
+    angle: DEFAULT_ANGLE,
     x: 50,
     y: 50,
     legacy: false,
-    stops: evenStops(DEFAULT_COLORS)
+    stops: DEFAULT_STOPS.map(function (s) { return { c: s.c, w: s.w }; })
   };
 
   var $ = function (id) { return document.getElementById(id); };
