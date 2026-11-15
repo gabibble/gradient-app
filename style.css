@@ -232,13 +232,15 @@ h1 {
   color: #fff;
   font-size: 22px;
   line-height: 1;
-  opacity: .85;
-  transition: transform .12s;
+  opacity: 0;
+  transition: opacity .12s, transform .12s;
   z-index: 2;
 }
 
 .rm.on-light { color: var(--ink); }
+.rm.show { opacity: .85; }
 .rm:hover, .rm:focus-visible { opacity: 1; transform: scale(1.2); }
+@media (hover: none) { .rm { opacity: .85; } }
 
 .add {
   flex: 0 0 56px;
@@ -479,6 +481,7 @@ h1 {
     top: calc(var(--mid) - 14px);
     left: auto;
     right: 12px;
+    opacity: .85;
   }
 
   .grip {

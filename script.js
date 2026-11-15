@@ -5,15 +5,15 @@
   var MAX_STOPS = 8;
   var MIN_STOPS = 2;
 
-  var DEFAULT_COLORS = ['#FFB199', '#FF7EB3', '#8F7BFF'];
+  var DEFAULT_COLORS = ['#FAD0C4', '#FFD1FF', '#A1C4FD'];
 
   var PRESETS = [
-    { name: 'Aurora', colors: DEFAULT_COLORS },
-    { name: 'Citrus', colors: ['#FFE29A', '#FF9F6B'], type: 'radial', x: 25, y: 25 },
-    { name: 'Matcha', colors: ['#D9F99D', '#5EC4A1'] },
+    { name: 'Peach sky', colors: DEFAULT_COLORS },
+    { name: 'Blush', colors: ['#FBEDE7', '#EFCFC6', '#C99A94'] },
+    { name: 'Aurora', colors: ['#FFB199', '#FF7EB3', '#8F7BFF'] },
+    { name: 'Pearl', colors: ['#FFFFFF', '#EDEAF4', '#CFCBE0'], type: 'radial', x: 70, y: 30 },
     { name: 'Lagoon', colors: ['#A8EDEA', '#4A90D9'] },
-    { name: 'Iris', colors: ['#C4B5FD', '#6366F1'], type: 'radial', x: 75, y: 25 },
-    { name: 'Midnight', colors: ['#7F7FD5', '#232946'], type: 'radial', x: 50, y: 100 }
+    { name: 'Fern', colors: ['#F1F7B5', '#A8D1A0', '#3E8E7E'] }
   ];
 
   // A preset sets the colors and the gradient type. Linear presets use the
@@ -243,6 +243,11 @@
         rm.textContent = '×';
         rm.setAttribute('aria-label', 'Remove color ' + (i + 1));
         rm.addEventListener('click', function () { removeStop(i); });
+        // The × is a sibling of its block, so the block's hover is mirrored
+        // onto it with a class.
+        var block = blocksEl.querySelectorAll('.block')[i];
+        block.addEventListener('pointerenter', function () { rm.classList.add('show'); });
+        block.addEventListener('pointerleave', function () { rm.classList.remove('show'); });
         blocksEl.appendChild(rm);
       });
     }
