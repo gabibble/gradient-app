@@ -172,7 +172,8 @@ h1 {
 }
 
 .block {
-  flex: 1 1 0;
+  flex: none;
+  width: var(--size);
   min-width: 0;
   min-height: 0;
   overflow: hidden;
@@ -462,6 +463,8 @@ h1 {
   .blocks-inner { flex: none; flex-direction: column; height: calc(var(--n, 3) * 64px); }
 
   .block {
+    width: auto;
+    height: var(--size);
     flex-direction: row;
     align-items: center;
     justify-content: space-between;

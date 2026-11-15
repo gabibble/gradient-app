@@ -323,7 +323,7 @@
     state.stops.forEach(function (s, i) {
       var b = blocks[i];
       if (!b) return;
-      b.style.flexGrow = (s.w * 1000).toFixed(2);
+      b.style.setProperty('--size', (s.w * 100).toFixed(3) + '%');
       b.style.background = s.c;
       b.classList.toggle('on-light', luminance(s.c) > 0.55);
       b.querySelector('.hex').textContent = s.c;
