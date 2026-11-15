@@ -314,7 +314,9 @@
 
   function update() {
     var g = gradient();
-    preview.style.background = g;
+    // The stylesheet paints this on the whole page on desktop and on the
+    // top section on mobile.
+    document.querySelector('.app').style.setProperty('--gradient', g);
     cssOut.textContent = cssText();
 
     var avg = state.stops.reduce(function (t, s) { return t + luminance(s.c); }, 0) / state.stops.length;
