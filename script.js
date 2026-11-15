@@ -3,6 +3,12 @@
 
   var STORE = 'gradient-generator:v2';
   var MAX_STOPS = 8;
+  // Phones stop at five so the strips, controls and presets fit on one screen.
+  var MAX_STOPS_MOBILE = 5;
+
+  function maxStops() {
+    return window.matchMedia('(max-width: 760px)').matches ? MAX_STOPS_MOBILE : MAX_STOPS;
+  }
   var MIN_STOPS = 2;
 
   // The gradient the page opens on:
@@ -14,6 +20,15 @@
     { c: '#326FAE', w: 0.255 },
     { c: '#6A1A8C', w: 0.285 },
     { c: '#AB0E71', w: 0.23 }
+  ];
+
+  // Phones open on a three-color version so the strips take less height.
+  // Blue is dropped: teal blending into purple passes through nearly the
+  // same blue on its own.
+  var DEFAULT_STOPS_MOBILE = [
+    { c: '#22DBD3', w: 1 / 3 },
+    { c: '#6A1A8C', w: 1 / 3 },
+    { c: '#AB0E71', w: 1 / 3 }
   ];
 
   var PRESETS = [
@@ -59,7 +74,8 @@
     x: 50,
     y: 50,
     legacy: false,
-    stops: DEFAULT_STOPS.map(function (s) { return { c: s.c, w: s.w }; })
+    stops: (window.matchMedia('(max-width: 760px)').matches ? DEFAULT_STOPS_MOBILE : DEFAULT_STOPS)
+      .map(function (s) { return { c: s.c, w: s.w }; })
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -267,7 +283,7 @@
       });
     }
 
-    addBtn.hidden = n >= MAX_STOPS;
+    addBtn.hidden = n >= maxStops();
     update();
   }
 
@@ -384,7 +400,7 @@
 
   addBtn.addEventListener('click', function () {
     var n = state.stops.length;
-    if (n >= MAX_STOPS) return;
+    if (n >= maxStops()) return;
     state.stops.forEach(function (s) { s.w *= n / (n + 1); });
     state.stops.push({ c: nextColor(state.stops[n - 1].c), w: 1 / (n + 1) });
     normalize(state.stops);
@@ -504,7 +520,10 @@
     if (!pngMenu.hidden) { closeMenu(); pngBtn.focus(); }
   });
 
-  window.addEventListener('resize', closePicker);
+  window.addEventListener('resize', function () {
+    closePicker();
+    addBtn.hidden = state.stops.length >= maxStops();
+  });
 
   /* ---------- dragging helper ---------- */
 
