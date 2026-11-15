@@ -26,8 +26,12 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
 
 .app {
   --m: clamp(16px, 2.4vw, 32px);
-  display: flex;
-  align-items: center;
+  /* The text and panel share one centred row and line up along their top
+     edges, so the title stays put when the code below it grows. */
+  display: grid;
+  grid-template-columns: minmax(0, auto) auto;
+  align-items: start;
+  align-content: center;
   justify-content: center;
   gap: clamp(32px, 6vw, 120px);
   height: 100vh;
@@ -150,8 +154,9 @@ h1 {
   transition: transform .15s, background .15s;
 }
 
-.switch[aria-checked="true"] i { background: currentColor; }
-.switch[aria-checked="true"] i::after { transform: translateX(12px); background: var(--inv); }
+/* Same outline and knob in both states: on slides the knob and tints the track. */
+.switch[aria-checked="true"] i { background: color-mix(in srgb, currentColor 28%, transparent); }
+.switch[aria-checked="true"] i::after { transform: translateX(12px); }
 
 /* Right: color blocks */
 
@@ -160,9 +165,8 @@ h1 {
   display: flex;
   flex-direction: column;
   flex: none;
-  align-self: center;
   width: min(46vw, clamp(400px, 30vw, 560px));
-  max-height: 100%;
+  max-height: calc(100vh - 2 * var(--m));
   min-height: 0;
   background: #fff;
   border-radius: 24px;
@@ -366,9 +370,10 @@ h1 {
   padding-bottom: 10px;
   font-size: 12px;
   color: var(--muted);
+  text-align: center;
 }
 
-.presets { display: flex; flex-wrap: wrap; gap: 10px; }
+.presets { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 
 /* The faint ring keeps near-white presets visible on the white panel. */
 .presets button {
@@ -481,6 +486,7 @@ h1 {
     align-self: stretch;
     width: auto;
     height: auto;
+    max-height: none;
     margin: 0;
     border-radius: 0;
     overflow: visible;
@@ -530,21 +536,9 @@ h1 {
 
   .panel { flex: none; padding: 20px 20px 28px; gap: 24px; }
 
-  .presets-wrap { margin-top: auto; padding: 0; }
+  .presets-wrap { margin-top: auto; padding: 0 20px 28px; }
 
-  .presets-label { padding: 0 20px 12px; }
+  .presets { gap: 12px; }
 
-  .presets { flex-wrap: nowrap; gap: 0; }
-
-  .presets button {
-    flex: 1;
-    width: auto;
-    height: auto;
-    aspect-ratio: 1;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .presets button:hover { transform: none; }
-  .presets button:focus-visible { outline-offset: -4px; }
+  .presets button { width: 40px; height: 40px; }
 }

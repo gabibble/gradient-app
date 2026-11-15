@@ -147,8 +147,10 @@
 
   /* ---------- gradient model ----------
      Each color has a weight (its share of the block row). A color's stop
-     position is the center of its block, rescaled so the first color sits
-     at 0% and the last at 100%. */
+     position is the center of its block, measured against where the centers
+     sit when all blocks are equal: equal blocks give an even 0% to 100%
+     spread, a wider first block pushes the first stop past 0%, and a wider
+     last block pulls the last stop below 100%. */
 
   function normalize(stops) {
     var total = stops.reduce(function (t, s) { return t + s.w; }, 0);
@@ -160,8 +162,11 @@
   function positions() {
     var centers = [], acc = 0;
     state.stops.forEach(function (s) { centers.push(acc + s.w / 2); acc += s.w; });
-    var first = centers[0], span = centers[centers.length - 1] - first;
-    return centers.map(function (c) { return Math.round(((c - first) / span) * 100); });
+    var n = centers.length;
+    var first = 1 / (2 * n), span = 1 - 1 / n;
+    return centers.map(function (c) {
+      return clamp(Math.round(((c - first) / span) * 100), 0, 100);
+    });
   }
 
   function isEven() {
@@ -172,7 +177,8 @@
   function colorList() {
     var p = positions(), n = state.stops.length, even = isEven();
     return state.stops.map(function (s, i) {
-      return even || i === 0 || i === n - 1 ? s.c : s.c + ' ' + p[i] + '%';
+      var implied = (i === 0 && p[i] === 0) || (i === n - 1 && p[i] === 100);
+      return even || implied ? s.c : s.c + ' ' + p[i] + '%';
     }).join(', ');
   }
 
