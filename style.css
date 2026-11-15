@@ -446,11 +446,14 @@ h1 {
 
 @media (max-width: 760px) {
   .app {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     height: auto;
+    min-height: 100vh;
     min-height: 100dvh;
-    align-content: start;
   }
+
+  .editor { flex: 1; }
 
   .preview { gap: 22px; padding: 22px 20px; }
 
@@ -492,7 +495,9 @@ h1 {
 
   .add { flex: none; height: 52px; border-bottom: 1px solid var(--line); }
 
-  .panel { padding: 20px 20px 28px; gap: 24px; }
+  .panel { flex: none; padding: 20px 20px 28px; gap: 24px; }
+
+  .presets-wrap { margin-top: auto; }
 
   .presets-label { padding: 0 20px 12px; }
 
