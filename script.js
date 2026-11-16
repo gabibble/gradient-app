@@ -352,6 +352,7 @@
 
     var avg = state.stops.reduce(function (t, s) { return t + luminance(s.c); }, 0) / state.stops.length;
     preview.classList.toggle('on-light', avg > 0.55);
+    document.querySelector('.credit').classList.toggle('on-light', avg > 0.55);
 
     var p = positions();
     var blocks = blocksEl.querySelectorAll('.block');
